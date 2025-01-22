@@ -27,8 +27,6 @@ app.post('/api/domain-suggestions', async (req, res) => {
 
     const suggestionArray = suggestions.split("\n").map(s => s.trim());
 
-    req.session.userState = 'domain_suggested';
-
     res.json({
       success: true,
       suggestions: suggestionArray,

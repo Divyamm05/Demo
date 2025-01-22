@@ -18,8 +18,6 @@ app.post('/api/check-email', (req, res) => {
     return res.status(400).json({ success: false, message: "Email is required." });
   }
 
-  req.session.email = email;
-
   db.query('SELECT * FROM users WHERE email = ?', [email], (err, results) => {
     if (err) {
       return res.status(500).json({ success: false, message: "Internal server error." });
