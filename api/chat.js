@@ -4,15 +4,13 @@ const openai = require('./index').openai;
 app.post('/api/chat', async (req, res) => {
   const { query } = req.body;
 
+  // Ensure query is provided
   if (!query) {
     return res.status(400).json({ success: false, message: "Query is required." });
   }
 
-  if (req.session.userState !== 'domain_suggested') {
-    return res.status(400).json({ success: false, message: "Please get domain suggestions first." });
-  }
-
   try {
+    // Call OpenAI's chat API
     const response = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: [
@@ -22,11 +20,13 @@ app.post('/api/chat', async (req, res) => {
       max_tokens: 150,
     });
 
+    // Respond with OpenAI's answer
     res.json({
       success: true,
       answer: response.choices[0].message.content,
     });
   } catch (error) {
+    console.error("Error processing OpenAI request:", error); // Log the error
     res.status(500).json({ success: false, message: "Failed to process your question." });
   }
 });
