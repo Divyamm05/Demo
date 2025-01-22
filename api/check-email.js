@@ -1,7 +1,6 @@
-const app = require('./index');  // Import Express app from index.js
+const { app, pool } = require('./index');  // Import app and pool from index.js
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
-const pool = require('./index');  // Import PostgreSQL connection pool
 
 // Set up email transporter with nodemailer (Gmail example)
 const transporter = nodemailer.createTransport({
