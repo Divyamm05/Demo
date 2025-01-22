@@ -1,38 +1,32 @@
-import { OpenAI } from 'openai';
+const app = require('./index');
+const openai = require('./index').openai;
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+app.post('/api/chat', async (req, res) => {
+  const { query } = req.body;
 
-export default async function handler(req, res) {
-  if (req.method === 'POST') {
-    const { query } = req.body;
-
-    if (!query) {
-      return res.status(400).json({ success: false, message: "Query is required." });
-    }
-
-    try {
-      const response = await openai.chat.completions.create({
-        model: "gpt-3.5-turbo",
-        messages: [
-          { role: "system", content: "You are an assistant helping with domain suggestions." },
-          { role: "user", content: query },
-        ],
-        max_tokens: 150,
-      });
-
-      const botResponse = response.choices[0].message.content;
-
-      res.json({
-        success: true,
-        answer: botResponse,
-      });
-    } catch (error) {
-      console.error('Error during AI chat:', error);
-      res.status(500).json({ success: false, message: "Failed to process your question." });
-    }
-  } else {
-    res.status(405).json({ success: false, message: "Method Not Allowed" });
+  if (!query) {
+    return res.status(400).json({ success: false, message: "Query is required." });
   }
-}
+
+  if (req.session.userState !== 'domain_suggested') {
+    return res.status(400).json({ success: false, message: "Please get domain suggestions first." });
+  }
+
+  try {
+    const response = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      messages: [
+        { role: "system", content: "You are an assistant helping with domain suggestions." },
+        { role: "user", content: query },
+      ],
+      max_tokens: 150,
+    });
+
+    res.json({
+      success: true,
+      answer: response.choices[0].message.content,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Failed to process your question." });
+  }
+});
