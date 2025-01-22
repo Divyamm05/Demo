@@ -2,10 +2,9 @@
   "name": "vercel-express-app",
   "version": "1.0.0",
   "description": "An Express app deployed on Vercel",
-  "main": "api/index.js",
   "scripts": {
-    "dev": "vercel dev",  
-    "deploy": "vercel --prod"  
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
   },
   "dependencies": {
     "express": "^4.17.1",
@@ -26,9 +25,9 @@
     "api",
     "nodejs"
   ],
-  "author": "Your Name",
+  "author": "D",
   "license": "MIT",
   "engines": {
-    "node": "22.x" 
+    "node": "22.x"
   }
 }
